@@ -1,6 +1,6 @@
 # JuzPost for Claude: social media scheduler with MCP and CLI
 
-**JuzPost is a free social media scheduler for YouTube, Instagram, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads and Tumblr.** This plugin connects it to Claude Code and Claude Cowork over MCP, so you can draft, schedule and publish posts by asking Claude. AI agent access starts at $15/month, and full publishing from Claude plus the [JuzPost CLI](https://github.com/jackstiffer/juzpost-cli) come with Pro at $69/month.
+**JuzPost is a free social media scheduler for YouTube, Instagram, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads and Tumblr.** This plugin connects it to Claude Code and Claude Cowork over MCP, so you can draft, schedule and publish posts by asking Claude. AI agent access starts at $15/month, and full publishing from Claude plus the [JuzPost CLI](https://github.com/juzpost/juzpost-cli) come with Pro at $69/month.
 
 One upload, every platform, and a clear report of what went out.
 
@@ -14,7 +14,7 @@ One upload, every platform, and a clear report of what went out.
 ### Claude Code (plugin)
 
 ```text
-/plugin marketplace add jackstiffer/juzpost-claude-plugin
+/plugin marketplace add juzpost/juzpost-claude-plugin
 /plugin install juzpost@juzpost
 ```
 
@@ -82,7 +82,7 @@ Full tool reference: [api.juzpost.com/docs](https://api.juzpost.com/docs).
 
 ## From the terminal
 
-[juzpost-cli](https://github.com/jackstiffer/juzpost-cli) schedules and posts from your shell, cron jobs or CI, using the same JuzPost account. It needs the Pro plan.
+[juzpost-cli](https://github.com/juzpost/juzpost-cli) schedules and posts from your shell, cron jobs or CI, using the same JuzPost account. It needs the Pro plan.
 
 ```bash
 npm install -g juzpost-cli

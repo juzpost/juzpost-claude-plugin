@@ -9,7 +9,7 @@
     "url": "https://www.juzpost.com"
   },
   "homepage": "https://api.juzpost.com/docs",
-  "repository": "https://github.com/jackstiffer/juzpost-claude-plugin",
+  "repository": "https://github.com/juzpost/juzpost-claude-plugin",
   "license": "MIT",
   "keywords": [
     "social-media-scheduler",
