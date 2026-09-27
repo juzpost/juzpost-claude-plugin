@@ -3,7 +3,7 @@
 ## 0.1.1 (2026-09-28)
 
 - Facebook and WordPress listed as supported networks.
-- Plugin icon added (`.claude-plugin/icon.png`).
+- Plugin icon (`.claude-plugin/icon.png`) and privacy policy, terms, support and docs links set in `plugin.json`.
 
 ## 0.1.0 (2026-09-13)
 
