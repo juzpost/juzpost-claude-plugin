@@ -5,7 +5,7 @@ description: Connect JuzPost to Claude, pick the workspace, and fix sign-in, wor
 
 # JuzPost setup
 
-This plugin adds the JuzPost MCP server (`https://www.juzpost.com/mcp`). JuzPost is a social media scheduler for YouTube, Instagram, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads and Tumblr.
+This plugin adds the JuzPost MCP server (`https://www.juzpost.com/mcp`). JuzPost is a social media scheduler for YouTube, Instagram, Facebook, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads, Tumblr and WordPress.
 
 ## Connecting
 

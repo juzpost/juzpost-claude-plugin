@@ -1,6 +1,6 @@
 # JuzPost for Claude: social media scheduler with MCP and CLI
 
-**JuzPost is a free social media scheduler for YouTube, Instagram, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads and Tumblr.** This plugin connects it to Claude Code and Claude Cowork over MCP, so you can draft, schedule and publish posts by asking Claude. AI agent access starts at $15/month, and full publishing from Claude plus the [JuzPost CLI](https://github.com/juzpost/juzpost-cli) come with Pro at $69/month.
+**JuzPost is a free social media scheduler for YouTube, Instagram, Facebook, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads, Tumblr and WordPress.** This plugin connects it to Claude Code and Claude Cowork over MCP, so you can draft, schedule and publish posts by asking Claude. AI agent access starts at $15/month, and full publishing from Claude plus the [JuzPost CLI](https://github.com/juzpost/juzpost-cli) come with Pro at $69/month.
 
 One upload, every platform, and a clear report of what went out.
 
@@ -51,7 +51,7 @@ The plugin also adds two commands:
 
 ## Supported networks
 
-YouTube (including Shorts), Instagram, TikTok, X (Twitter), LinkedIn, Pinterest, Bluesky, Threads, Tumblr.
+YouTube (including Shorts), Instagram, Facebook Pages, TikTok, X (Twitter), LinkedIn, Pinterest, Bluesky, Threads, Tumblr, WordPress.
 
 ## Plans and pricing
 

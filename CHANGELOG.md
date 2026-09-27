@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 (2026-09-28)
+
+- Facebook and WordPress listed as supported networks.
+- Plugin icon added (`.claude-plugin/icon.png`).
+
 ## 0.1.0 (2026-09-13)
 
 - First release.

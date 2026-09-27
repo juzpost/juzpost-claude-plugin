@@ -1,6 +1,6 @@
 ---
 name: social-media-scheduler
-description: Draft, schedule and publish social media posts to YouTube, Instagram, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads and Tumblr with the JuzPost tools, confirming with the user before anything is published.
+description: Draft, schedule and publish social media posts to YouTube, Instagram, Facebook, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads, Tumblr and WordPress with the JuzPost tools, confirming with the user before anything is published.
 ---
 
 # Scheduling posts with JuzPost
