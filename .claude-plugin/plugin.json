@@ -10,10 +10,6 @@
   },
   "icon": ".claude-plugin/icon.png",
   "homepage": "https://api.juzpost.com/docs",
-  "documentationUrl": "https://api.juzpost.com/docs",
-  "privacyPolicyUrl": "https://www.juzpost.com/privacy-policy",
-  "termsOfServiceUrl": "https://www.juzpost.com/terms-of-service",
-  "supportUrl": "https://www.juzpost.com/support",
   "repository": "https://github.com/juzpost/juzpost-claude-plugin",
   "license": "MIT",
   "keywords": [
