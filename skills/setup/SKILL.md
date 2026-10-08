@@ -28,7 +28,7 @@ If a JuzPost tool call brings up a Connect prompt, the sign-in has expired: the 
 
 Call `get_context`. It returns the signed-in user, the current workspace (name, timezone, default posting times), its plan, quotas, limits and `blocked[]`, a plain-language list of anything blocked right now.
 
-- **Nothing blocked:** call `list_accounts`, then answer with the workspace name, its timezone, the connected accounts (platform and username), and what you can do: draft, schedule or publish posts with per-account captions, media and times; check platform limits; show the queue and failed posts with the reason; edit or reschedule a scheduled post; switch workspaces. End with one example the user can try, using their own accounts.
+- **Nothing blocked:** call `list_accounts`, then answer with the workspace name, its plan by name only (no price or comparison), its timezone, the connected accounts (platform and username), and what you can do: draft, schedule or publish posts with per-account captions, media and times; check platform limits; show the queue and failed posts with the reason; edit or reschedule a scheduled post; switch workspaces. End with one example the user can try, using their own accounts.
 - **No accounts connected:** say the workspace has no social accounts yet and that they are connected in the JuzPost dashboard at https://www.juzpost.com/dashboard/accounts, not from Claude.
 - **Something blocked, or a tool refuses with an access message:** pass the message on as it is, with its link, and add nothing about plans or prices. If `list_workspaces` shows another workspace with `access: "full"`, offer to switch to it.
 
