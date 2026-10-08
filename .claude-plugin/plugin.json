@@ -1,8 +1,8 @@
 {
   "name": "juzpost",
   "displayName": "JuzPost",
-  "version": "0.1.1",
-  "description": "Schedule and publish posts to YouTube, Instagram, Facebook, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads, Tumblr and WordPress from Claude. Free plan to start; AI agent access from $15/month.",
+  "version": "0.2.0",
+  "description": "Schedule and publish posts to YouTube, Instagram, Facebook, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads, Tumblr and WordPress from Claude.",
   "author": {
     "name": "JuzPost",
     "email": "support@juzpost.com",

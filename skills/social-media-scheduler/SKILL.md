@@ -1,32 +1,47 @@
 ---
 name: social-media-scheduler
-description: Draft, schedule and publish social media posts to YouTube, Instagram, Facebook, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads, Tumblr and WordPress with the JuzPost tools, confirming with the user before anything is published.
+description: Draft, schedule and publish social media posts to YouTube, Instagram, Facebook, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads, Tumblr and WordPress with JuzPost, confirming with the user before anything is published. Also reviews the queue, explains failed posts, and edits or reschedules posts.
 ---
 
 # Scheduling posts with JuzPost
 
-Use the JuzPost MCP tools to turn a brief into a scheduled post. Creating and scheduling need the Pro plan on the current workspace; reading needs Solo or higher. If a tool isn't connected yet, see the `setup` skill.
+The user's explicit instructions take priority over this skill. Never schedule, publish or delete without the user's go-ahead in this conversation.
 
-## The flow
+If the JuzPost tools are missing or signed out, follow the `setup` skill first. Do not bring up plans or prices; if a tool refuses with an access message, pass it on as it is.
 
-1. **Check the connection.** Call `get_context`. It returns the workspace, plan, timezone, default posting times and anything blocked. If creating or scheduling is blocked, tell the user what the plan allows before drafting.
-2. **Pick the accounts.** Call `list_accounts` for account ids, platforms, usernames and health. If the user names a group ("my brand accounts"), call `list_groups` to resolve it. Skip accounts marked as needing reconnection and say which ones.
-3. **Check the fit.** For captions, titles or media near a limit, call `get_platform_limits` for the platforms involved.
-4. **Attach media.** For a file or a link, call `upload_media` (a public URL up to 100 MB, or base64 up to 3 MB) and keep the returned `media_key`. `create_post` also accepts public URLs directly in `media_urls`.
-5. **Create the draft.** Call `create_post` with `type` set to the type the user asked for (`text`, `image` or `video`). If the user hasn't said, ask. Include `content`, and `title` for YouTube and Pinterest. Pass an `idempotency_key` so a retry never creates a second draft. The response lists warnings for any platform whose caption limit is exceeded.
-6. **Confirm.** Show the user the caption, media, the accounts and the time (in the workspace timezone). When a Bluesky account gets images or video, ask for alt text for each file, and whether the media needs a content warning. Do not schedule until the user agrees.
-7. **Schedule or publish.** Call `schedule_post` with `post_id`, `account_ids`, and either `publish_at` (ISO 8601 UTC, at least 10 minutes ahead) or `publish_now: true`. Use `platform_overrides` for per-account captions and `publish_at_overrides` for per-account times. For Bluesky accounts, pass `bluesky_settings` keyed by account id: `alt_text` with one entry per file in the post's order (`""` for a file with no description, up to 2,000 characters each) and `labels` (at most one of `sexual`, `nudity`, `porn`, plus `graphic-media`, or `[]`). Labels only go on posts with images or video. Retrying the same call is safe: accounts already scheduled are not scheduled twice.
-8. **Report.** Call `get_post` to show each account's status. After publishing, `get_post` also explains any failure for an account.
+## Schedule a post
 
-## Working with existing posts
+1. **Check the connection.** Call `get_context` for the workspace, its timezone and default posting times, and `blocked[]`. If posting is blocked, pass the message on before collecting any post details.
+2. **Pick the accounts.** Call `list_accounts` for account ids, platforms, usernames and health. If the user names a group ("my brand accounts"), call `list_groups`. Skip accounts with `health.status` `needs_reconnect` and say which ones. If there are no accounts, say they are connected at https://www.juzpost.com/dashboard/accounts.
+3. **Get the brief.** Ask for anything missing:
+   - `type`: `text`, `image`, `video` or `blog` (a WordPress blog post). Never guess it; ask if the user hasn't said.
+   - `content` (the caption), and `title` where the platform has one (YouTube, Pinterest, and every blog post).
+   - Media, if the type needs it.
+   - The time, read in the workspace timezone, or "now".
+4. **Check the fit.** For captions, titles or media near a limit, call `get_platform_limits` for the platforms involved.
+5. **Platform choices.** A Pinterest account needs a board: call `list_options` with `req_type` `list_board`, ask which one, and pass it as `pinterest` keyed by account id with `board_id`. For a WordPress post type other than a blog post, use `list_post_type`. For Bluesky images or video, ask for alt text for each file and whether a content warning is needed (`bluesky`: `alt_text`, `labels`).
+6. **Attach media.**
+   - A file the user attached in chat or a public link: `upload_media` (`file` or `url`), keep the `media_key`. A public link can also go straight into `media_urls`.
+   - A local file or any video in Claude Code: `create_upload_url`, then PUT the original bytes, unchanged, to `upload_url` with the returned header. Keep the `media_key`.
+7. **Confirm.** Show the caption, media, each account (platform and username), any per-account differences, and the time in the workspace timezone. Wait for the user to agree.
+8. **Schedule.** One `schedule_post` call creates and schedules the post: `type`, `content`, `title` if needed, `media_keys` or `media_urls`, `account_ids`, either `publish_at` (ISO 8601 UTC, at least 10 minutes ahead) or `publish_now: true`, and an `idempotency_key` so a retry never makes a second post.
+   - Different text per account: `account_overrides` keyed by account id (`title`, `description`, `hashtags`); one text for every account of a platform: `channel_overrides` keyed by platform id.
+   - Different media or cover per account: `media_by_account`, `cover_by_account`.
+   - Different time per account: `publish_at_overrides` keyed by account id.
+   - Platform settings: `tiktok`, `pinterest`, `facebook`, `bluesky`, `wordpress`, each keyed by account id.
+9. **Report.** Call `get_post` and show each account's status. Refer to the post by its caption or title and to accounts by platform and username, not by id.
 
-- `list_posts` filters by `status` (`draft`, `scheduled`, `published`, `failed`), account and date range.
-- `update_post` edits a draft before it is scheduled. Scheduled and published posts can't be edited.
-- `delete_post` deletes a draft. Confirm with the user first.
+To save a draft without scheduling, use `create_post` with the same fields, and schedule it later with `schedule_post` and its `post_id`.
 
-## Limits to keep in mind
+## Existing posts
 
-- One post per `create_post` call; there is no bulk creation.
+- `list_posts` filters by `status` (`draft`, `scheduled`, `published`, `failed`), `accountId`, and `from`/`to`; `sort: "scheduledFor"` orders by publish time.
+- `update_post` edits a draft or a scheduled post. `publish_at` on a scheduled post moves it to a new time. A scheduled post can no longer be edited from 10 minutes before it goes out, and published or failed posts can't be edited.
+- A scheduled post can't be cancelled from Claude; the user cancels it in the JuzPost dashboard at https://www.juzpost.com/dashboard/scheduled.
+- `delete_post` deletes a draft only. Confirm with the user first. It never removes anything already published on a platform.
+- For a failed post, `get_post` gives each account's error; explain it in plain words.
+
+## Limits
+
 - A workspace can create 30 posts per hour through a connector.
-- The Free plan schedules up to 30 days ahead and does not post to X; paid plans schedule up to 180 days ahead.
-- A plan lock error names the plan the action needs and links to https://www.juzpost.com/pricing. Pass that on to the user as it is.
+- How far ahead a post can be scheduled is `limits.scheduleAheadDays` in `get_context`.

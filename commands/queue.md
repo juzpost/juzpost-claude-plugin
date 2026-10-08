@@ -11,5 +11,3 @@ Usage: `/juzpost:queue [scheduled|failed|draft|published]`
 2. Show each post's caption (first line), accounts, and scheduled or published time in the workspace timezone from `get_context`.
 3. For each failed post, call `get_post` and give the per-account error in plain language.
 4. If a list has more pages, say so and offer to continue.
-
-Reading the queue needs the Solo plan or higher on the current workspace.

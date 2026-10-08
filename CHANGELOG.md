@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0 (2026-10-08)
+
+- `setup` tells Claude how to reconnect a JuzPost connector that is added but signed out, on claude.ai, the apps and Claude Code, and how to answer "what can JuzPost do".
+- Scheduling follows the current tools: one `schedule_post` call, `blog` posts, per-account text, media, times and platform settings, and editing or retiming scheduled posts.
+- Access refusals are passed on as JuzPost sends them; the skills, commands and descriptions no longer list plans or prices.
+
 ## 0.1.1 (2026-09-28)
 
 - Facebook and WordPress listed as supported networks.

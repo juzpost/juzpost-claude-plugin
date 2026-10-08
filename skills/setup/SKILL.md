@@ -1,54 +1,56 @@
 ---
 name: setup
-description: Connect JuzPost to Claude, pick the workspace, and fix sign-in, workspace or plan problems with the JuzPost tools.
+description: Connect or reconnect JuzPost, answer "what can JuzPost do", pick the workspace, and handle sign-in, disconnected-connector, workspace or access problems with the JuzPost tools. Use whenever the user mentions JuzPost and its tools are missing, signed out or refusing.
 ---
 
 # JuzPost setup
 
-This plugin adds the JuzPost MCP server (`https://www.juzpost.com/mcp`). JuzPost is a social media scheduler for YouTube, Instagram, Facebook, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads, Tumblr and WordPress.
+The user's explicit instructions take priority over this skill. Never schedule, publish or delete without the user's go-ahead in this conversation.
 
-## Connecting
+JuzPost schedules and publishes social media posts to YouTube, Instagram, Facebook, TikTok, X, LinkedIn, Pinterest, Bluesky, Threads, Tumblr and WordPress. This plugin connects Claude to the JuzPost MCP server at `https://www.juzpost.com/mcp`.
 
-1. The first time a JuzPost tool runs, Claude opens a JuzPost sign-in page in the browser. Sign in or create an account at https://www.juzpost.com.
-2. On the consent screen, choose the workspace the connection should act on and the permissions to grant.
-3. After approval, the JuzPost tools are available. In Claude Code, `/mcp` shows the `juzpost` server and its status.
+## When JuzPost tools are missing or signed out
 
-No API key, client id or secret is needed. To disconnect, revoke the connection in JuzPost under Settings, Connections.
+Before saying JuzPost isn't available, check whether a JuzPost connector is already added but disconnected or signed out. If it is, say so plainly and give the steps for where the user is:
 
-## Checking what the connection can do
+- **claude.ai, the desktop app or the mobile app:** open Customize → Connectors (https://claude.ai/customize/connectors), find JuzPost, select Connect, sign in to JuzPost, and choose the workspace on the consent screen. Then turn JuzPost on for this chat if it is off.
+- **Claude Code:** run `/mcp`, select the JuzPost server, then Authenticate. A JuzPost sign-in page opens in the browser.
 
-- `get_context` reports the signed-in user, the current workspace, its plan, quotas, and a plain-language list of anything blocked right now.
-- `list_workspaces` lists every workspace the user belongs to and what each one allows: `none`, `read` or `full`.
-- `switch_workspace` moves the connection to another workspace by id or slug. Confirm the workspace with the user first.
+If no JuzPost connector is added at all, the user adds it from the Connectors directory (search "JuzPost") or installs this plugin, then follows the same steps.
 
-Listing and switching workspaces work on every plan, so a connection on a locked workspace can always move to one that allows more.
+While the user signs in, offer to collect the post: the text, any media, which platforms or accounts, and when. Then pick up where you left off once the tools load.
 
-## What each plan allows through Claude
+Before sign-in, the job is getting the user signed in. Say in one line what JuzPost does and how to connect. Do not bring up plans, prices or upgrades. If the user asks what JuzPost costs, answer briefly and link https://www.juzpost.com/pricing.
 
-Access follows the plan of the workspace the connection points at.
+If a JuzPost tool call brings up a Connect prompt, the sign-in has expired: the user selects Connect, signs in again, and the same call continues. Nothing is lost.
 
-| Plan | Price | Through Claude |
+## "What can you do?"
+
+Call `get_context`. It returns the signed-in user, the current workspace (name, timezone, default posting times), its plan, quotas, limits and `blocked[]`, a plain-language list of anything blocked right now.
+
+- **Nothing blocked:** call `list_accounts`, then answer with the workspace name, its timezone, the connected accounts (platform and username), and what you can do: draft, schedule or publish posts with per-account captions, media and times; check platform limits; show the queue and failed posts with the reason; edit or reschedule a scheduled post; switch workspaces. End with one example the user can try, using their own accounts.
+- **No accounts connected:** say the workspace has no social accounts yet and that they are connected in the JuzPost dashboard at https://www.juzpost.com/dashboard/accounts, not from Claude.
+- **Something blocked, or a tool refuses with an access message:** pass the message on as it is, with its link, and add nothing about plans or prices. If `list_workspaces` shows another workspace with `access: "full"`, offer to switch to it.
+
+## Workspaces
+
+- `list_workspaces` lists every workspace the user belongs to, marks the current one, and shows `access`: `full` (the tools work there) or `none`. It works on every workspace.
+- `switch_workspace` moves the connection to another workspace by id or slug. Confirm the workspace with the user first. It also works on every workspace, so a user can always move off one where the tools are refused.
+
+## When something is refused
+
+| What happens | What it means | What to tell the user |
 |---|---|---|
-| Free | $0 | List and switch workspaces only |
-| Solo | $15/month | Read: context, accounts, groups, posts, platform limits |
-| Growth | $30/month | Read: context, accounts, groups, posts, platform limits |
-| Pro | $69/month | Everything: upload media, create, edit and delete drafts, schedule and publish |
-
-Current prices and limits: https://www.juzpost.com/pricing
-
-## Troubleshooting
-
-| What happens | What it means | What to do |
-|---|---|---|
-| A sign-in page opens again | The connection expired or was revoked | Sign in again; nothing else is lost |
-| "needs the Solo plan or higher" or "needs the Pro plan or higher" | The current workspace's plan does not include that action | Tell the user which plan the action needs, or check `list_workspaces` for a workspace that allows it |
+| A Connect prompt or sign-in page appears | The sign-in expired or was revoked | Sign in again; nothing is lost |
+| An access message with a link to the JuzPost website | This workspace doesn't include the action | Pass the message on as it is. Offer `list_workspaces` if they have other workspaces |
 | "no longer a member" | The user was removed from the workspace | Use `list_workspaces`, then `switch_workspace` |
-| A rate limit message about posts in the last hour | A workspace can create 30 posts per hour through a connector | Wait for the hour to pass, or schedule drafts that already exist |
-| A tool is not listed | The permission for it was not granted at sign-in | Disconnect under Settings, Connections and connect again with that permission |
+| A rate limit about posts in the last hour | A workspace can create 30 posts per hour through a connector | Wait for the hour to pass |
+| An account shows `needs_reconnect` in `list_accounts` | That social account's own sign-in lapsed | Reconnect it at https://www.juzpost.com/dashboard/accounts; skip it for now and say which one |
+| A tool you expect is not listed | Its permission wasn't granted at sign-in | Disconnect JuzPost and connect again, granting that permission |
 
 ## Links
 
 - Tool reference: https://api.juzpost.com/docs
+- Support: support@juzpost.com or https://www.juzpost.com/support
 - Privacy policy: https://www.juzpost.com/privacy-policy
 - Terms: https://www.juzpost.com/terms-of-service
-- Support: support@juzpost.com or https://www.juzpost.com/support
